@@ -87,7 +87,6 @@ Game {
         id: gameScene
         anchors.fill: root
         focus: true
-        debug: false
         running: false
 
         property int numberOfAsteroids: 3 + Math.floor(root.currentLevel * 0.5)
@@ -164,7 +163,7 @@ Game {
                 anchors.fill: world
                 world: world
                 opacity: 1
-                visible: true
+                visible: false
                 z: 100
             }
 
