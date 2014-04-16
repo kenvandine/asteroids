@@ -23,9 +23,9 @@ Entity {
             id: circleShape
             anchors.fill: parent
             radius: parent.width/2
-            density: 10
             friction: 0.3
-            restitution: 0.1
+            density: 5
+            restitution: 0.5
         }
     ]
 
@@ -70,7 +70,7 @@ Entity {
 
     function applyRandomImpulse() {
         var impulse = Qt.point(randomImpulse(), randomImpulse());
-        applyLinearImpulse(impulse, getWorldCenter());
+        applyLinearImpulse(impulse, center);
     }
 
     function setRandomAngularVelocity() {

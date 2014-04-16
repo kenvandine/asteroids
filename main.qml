@@ -130,8 +130,6 @@ Game {
             id: world
             anchors.fill: parent
             gravity: Qt.point(0.0, 0.0)
-            x: parent.x
-            y: parent.y
 
             onPostSolve: {
                 var entityA = contact.fixtureA.parent
@@ -257,10 +255,10 @@ Game {
                     objectName: "bullet"
                     width: 5
                     height: 5                    
+                    property point center: Qt.point(x + width / 2, y + height / 2)
                     behavior: keepInsideViewBehavior
                     bodyType: Body.Dynamic
                     sleepingAllowed: false
-                    gravityScale: 0.1
                     bullet: true
 
                     fixtures: [
@@ -268,8 +266,8 @@ Game {
                             anchors.fill: parent
                             radius: parent.width/2
                             friction: 0.3
-                            density: 0.1
-                            restitution: 0
+                            density: 5
+                            restitution: 0.5
                         }]
                     Rectangle {
                         color: "yellow"
@@ -291,9 +289,9 @@ Game {
                 objectName: "ship"                
                 width: shipSprite.width
                 height: shipSprite.height
+                property point center: Qt.point(x + width / 2, y + height / 2)
                 rotation: knob.rotation
                 behavior: shipBehavior
-                gravityScale: 0.1
                 bodyType: Body.Dynamic
                 bullet: true
                 sleepingAllowed: false
@@ -327,14 +325,13 @@ Game {
                 }
 
                 function fire() {
-                    var originPoint = Qt.point(ship.width / 2, 0);
-                    var angle = ship.rotation * Math.PI / 180.0;
-                    var rotatedOrigin = gameScene.rotatePoint(originPoint, angle);
                     var bulletObject = bulletComponent.createObject(world);
-                    bulletObject.x = (ship.x + (ship.width/2)) + rotatedOrigin.x;
-                    bulletObject.y = (ship.y + (ship.height/2)) + rotatedOrigin.y;
-                    var center = Qt.point(bulletObject.x - (bulletObject.width / 2), bulletObject.y + (bulletObject.height / 2))
-                    bulletObject.applyLinearImpulse(rotatedOrigin, center);
+                    var heading = Qt.point(2, 0);
+                    var angle = ship.rotation * Math.PI / 180.0;
+                    var rotatedHeading = gameScene.rotatePoint(heading, angle);
+                    bulletObject.x = ship.center.x + rotatedHeading.x;
+                    bulletObject.y = ship.center.y + -rotatedHeading.y;
+                    bulletObject.applyLinearImpulse(rotatedHeading, ship.center);
                 }
             }
 
